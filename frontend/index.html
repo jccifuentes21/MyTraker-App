@@ -30,15 +30,13 @@
       <div class="card-body">
         <form class="row g-1 align-items-center justify-content-end mb-3">
           <div class="col-auto p-1">
-            <label for="addNewAccount" class="col-form-label"
-              >New Account:</label
-            >
+            <label for="addNewAccount" class="col-form-label">New Account:</label>
           </div>
           <div class="col-auto p-1">
-            <input type="text" class="form-control" />
+            <input id="newAccount" type="text" class="form-control" />
           </div>
           <div class="col-auto p-1">
-            <button type="submit" class="btn btn-success">
+            <button id="newAccount-form" type="submit" class="btn btn-success">
               Add new account
             </button>
           </div>
@@ -123,28 +121,35 @@
             <button class="col-auto ms-2 btn btn-success ">Add transaction</button>
           </div>
         </form>
-        Account summary
-        <ul></ul>
-        Filter by account:
-        <select></select>
-        <table>
-          <tr>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Transaction Type</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>From</th>
-            <th>To</th>
-          </tr>
-        </table>
+        <div class="account-summary">
+          Account summary
+          <ul></ul>
+          <div id="account-summary"></div>
+        </div>
+        <div class="account-filter">
+          <label for="accountFilter" class="form-label">Filter by account:</label>
+          <select id="accountFiler" class="form-select w-auto mb-4 form-check-inline">
+            <option selected>Choose...</option>
+          </select>
+          <table class="table table-primary table-striped">
+            <tr>
+              <th>Id</th>
+              <th>Username</th>
+              <th>Transaction Type</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>From</th>
+              <th>To</th>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
     <script src="./js/helpers/Account.js"></script>
     <script src="./js/helpers/Category.js"></script>
-    <script src="./js/helpers/Common.js"></script>
+    <script type="module" src="./js/helpers/Common.js"></script>
     <script src="./js/helpers/Transaction.js"></script>
-    <script src="./js/index.js"></script>
+    <script type="module" src="./js/index.js"></script>
   </body>
 </html>
