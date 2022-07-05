@@ -1,18 +1,26 @@
-import { addNewAccount, postMethod } from "./helpers/Common.js";
+import {
+  addNewAccount,
+  updateAccounts
+} from "./helpers/Common.js";
 
 $(() => {
   //Start coding here!
+
   const newAccountForm = $("#newAccount-form");
   const newAccountText = $("#newAccount");
-  
-  let usernamesArr = [];
-  $.get("http://localhost:3000/accounts", (data) => {
-    usernamesArr = data
-  });
-  
-  newAccountForm.click((e) => {
+  const accountSelect = $("#accountSelect");
+  const fromSelect = $("#fromSelect");
+  const toSelect = $("#toSelect");
+  const filterSelect = $("#filterSelect");
+
+  updateAccounts(accountSelect, fromSelect, toSelect, filterSelect);
+
+  newAccountForm.submit((e) => {
     e.preventDefault();
-    
-    addNewAccount(usernamesArr, newAccountText);
+    addNewAccount(newAccountText);
+
+    setTimeout(() => {
+      updateAccounts(accountSelect, fromSelect, toSelect, filterSelect);
+    }, 100);
   });
 });

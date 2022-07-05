@@ -28,17 +28,15 @@
         <h1>myTrakr</h1>
       </div>
       <div class="card-body">
-        <form class="row g-1 align-items-center justify-content-end mb-3">
+        <form id="newAccount-form" class="row g-1 justify-content-end mb-3">
           <div class="col-auto p-1">
             <label for="addNewAccount" class="col-form-label">New Account:</label>
           </div>
           <div class="col-auto p-1">
-            <input id="newAccount" type="text" class="form-control" />
+            <input id="newAccount" type="text" class="form-control" required/>
           </div>
           <div class="col-auto p-1">
-            <button id="newAccount-form" type="submit" class="btn btn-success">
-              Add new account
-            </button>
+            <button id="submit-btn" type="submit" class="btn btn-success">Add new account</button>
           </div>
         </form>
 
@@ -127,8 +125,8 @@
           <div id="account-summary"></div>
         </div>
         <div class="account-filter">
-          <label for="accountFilter" class="form-label">Filter by account:</label>
-          <select id="accountFiler" class="form-select w-auto mb-4 form-check-inline">
+          <label for="filterSelect" class="form-label">Filter by account:</label>
+          <select id="filterSelect" class="form-select w-auto mb-4 form-check-inline">
             <option selected>Choose...</option>
           </select>
           <table class="table table-primary table-striped">
