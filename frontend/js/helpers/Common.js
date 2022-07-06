@@ -54,9 +54,10 @@ export const addNewAccount = (text) => {
     });
 };
 
-export const updateAccounts = (accountSel, fromSel, toSel, filterSel) =>{
+export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSummary) =>{
   let usernames = []
   let accounts = []
+  let accountsArr = []
   $.get('http://localhost:3000/accounts', (data) =>{
     accounts = data
     data.forEach((element)=>{
@@ -80,12 +81,38 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel) =>{
     //Updating Account Summary
     Object.values(accounts).forEach((element)=>{
       const account = new Account (element.username, element.transactions)
-      console.log(account)
+      accountsArr.push(account)
+    })
+
+    accountSummary.html('')
+    accountsArr.forEach((element)=>{
+      let row = $('<tr></tr>')
+      let cellUsername = $('<td></td>')
+      let cellBalance = $('<td></td>')
+      cellUsername.text(element.username)
+      cellBalance.text(element.balance)
+      row.append(cellUsername)
+      row.append(cellBalance)
+      accountSummary.append(row)
     })
     
-
   }, 100);
 
-  return usernames;
+  // return accountsArr;
+  
 }
 
+export const handleNewTransaction = (deposit, transfer, withdraw) =>{
+    
+  deposit.change(()=>{
+    
+    console.log(deposit.val())
+  })
+  transfer.change(()=>{
+    console.log(transfer.val())
+  })
+  withdraw.change(()=>{
+    console.log(withdraw.val())
+  })
+
+}

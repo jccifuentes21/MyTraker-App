@@ -1,7 +1,11 @@
 class Account {
   constructor(username, transactions) {
     this.username = username;
-    this.transactions = [] || transactions;
+    if(transactions != null){
+      this.transactions = transactions;
+    } else {
+      this.transactions = []
+    }
   }
 
   get balance() {
