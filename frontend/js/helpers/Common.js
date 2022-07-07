@@ -13,7 +13,7 @@ export const postMethod = (endpoint, data) => {
       });
       break;
 
-    case "transactions":
+    case "transaction":
       const newTransaction = data;
       $.ajax({
         type: "POST",
@@ -54,21 +54,13 @@ export const addNewAccount = (text) => {
   });
 };
 
-export const updateAccounts = (
-  accountSel,
-  fromSel,
-  toSel,
-  filterSel,
-  accountSummary
-) => {
-  let usernames = [];
-  let accounts = [];
+export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSummary) => {
+
+  let accountsRaw = [];
   let accountsArr = [];
+
   $.get("http://localhost:3000/accounts", (data) => {
-    accounts = data;
-    data.forEach((element) => {
-      usernames.push(element.username);
-    });
+    accountsRaw = data;
   });
 
   setTimeout(() => {
@@ -77,21 +69,23 @@ export const updateAccounts = (
     fromSel.html("<option selected>Choose...</option>");
     toSel.html("<option selected>Choose...</option>");
     filterSel.html("<option selected>Choose...</option>");
-    usernames.forEach((element) => {
-      accountSel.append($("<option></option>").text(element));
-      fromSel.append($("<option></option>").text(element));
-      toSel.append($("<option></option>").text(element));
-      filterSel.append($("<option></option>").text(element));
-    });
+    accountSummary.html("");
 
-    //Updating Account Summary
-    Object.values(accounts).forEach((element) => {
-      const account = new Account(element.username, element.transactions);
+          
+    //Creating accounts array with account class objects
+    Object.values(accountsRaw).forEach((element) => {
+      const account = new Account(element.username, element.transactions, element.id);
       accountsArr.push(account);
     });
 
-    accountSummary.html("");
+    //Updating values of selectors, and adding accounts to accounts summary
     accountsArr.forEach((element) => {
+
+      accountSel.append($("<option></option>").text(element.username));
+      fromSel.append($("<option></option>").text(element.username));
+      toSel.append($("<option></option>").text(element.username));
+      filterSel.append($("<option></option>").text(element.username));
+
       let row = $("<tr></tr>");
       let cellUsername = $("<td></td>");
       let cellBalance = $("<td></td>");
@@ -101,10 +95,29 @@ export const updateAccounts = (
       row.append(cellBalance);
       accountSummary.append(row);
     });
+
   }, 100);
 
   // return accountsArr;
 };
+
+export const getAccounts = () =>{
+  let accountsRaw = []
+  let accountsArr = []
+
+  $.get("http://localhost:3000/accounts", (data) => {
+    accountsRaw = data;
+  });
+
+  setTimeout(() => {
+    Object.values(accountsRaw).forEach((element)=>{
+      const account = new Account (element.username, element.transaction, element.id)
+      accountsArr.push(account)
+    })
+  }, 150);
+
+  return accountsArr
+}
 
 export const handleNewTransaction = () => {
   let radioValue;
@@ -115,16 +128,51 @@ export const handleNewTransaction = () => {
     case "deposit":
       $("#to-div").addClass("d-none");
       $("#from-div").addClass("d-none");
+      $("#account-div").removeClass('d-none')
       break;
 
     case "withdraw":
       $("#to-div").addClass("d-none");
       $("#from-div").addClass("d-none");
+      $("#account-div").removeClass('d-none')
       break;
 
     case "transfer":
       $("#to-div").removeClass("d-none");
       $("#from-div").removeClass("d-none");
+      $("#account-div").addClass('d-none')
       break;
   }
 };
+
+export const handleAddTransaction = (description, amount, accountSelect, fromSelect, toSelect, type) =>{
+  const accountsArr = getAccounts()
+  let accountId
+  let accountIdFrom = null
+  let accountIdTo = null
+
+  setTimeout(() => {
+    //Setting the correct ID's for transactions
+    accountsArr.forEach((account) =>{
+      if(accountSelect.val() == account.username){
+        accountId = account.id
+        console.log('Account id is ', accountId)
+      }
+      if(fromSelect.val() == account.username && fromSelect.val() != "Choose..."){
+        accountIdFrom = account.id
+        console.log('Account id from is ', accountIdFrom)
+      }
+      if(toSelect.val() == account.username && toSelect.val() != "Choose..."){
+        accountIdTo = account.id
+        console.log('Account id to is ', accountIdTo)
+      }
+    })
+
+    // let newTransaction = new Transaction (amount.val(),)
+    let newTransaction = {accountId: accountId, accountIdFrom: accountIdFrom, accountIdTo: accountIdTo, account: accountSelect.val(), amount: amount.val(), from: fromSelect.val(), to: toSelect.val(), description: description.val(), type: type.val()}
+
+    postMethod('transaction', newTransaction)
+    
+    console.log(accountsArr)
+  }, 150);
+}
