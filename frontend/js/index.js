@@ -4,9 +4,10 @@ import {
   updateAccounts
 } from "./helpers/Common.js";
 
+import {handleCategories, setCategories, showCategoriesInput} from "./helpers/Category.js"
+
 $(() => {
   //Start coding here!
-
   const newAccountForm = $("#newAccount-form");
   const newAccountText = $("#newAccount");
   const accountSelect = $("#accountSelect");
@@ -14,11 +15,12 @@ $(() => {
   const toSelect = $("#toSelect");
   const filterSelect = $("#filterSelect");
   const accountSummary = $('#account-summary')
-  const depositRadio = $('#deposit')
-  const withdrawRadio = $('#withdraw')
-  const transferRadio = $('#transfer')
+  const categoryForm = $('#category-form')
+  const categorySelector = $("#category-selector");
+
 
   updateAccounts(accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
+  setCategories();
 
   newAccountForm.submit((e) => {
     e.preventDefault();
@@ -30,7 +32,33 @@ $(() => {
 
   });
 
-  handleNewTransaction(depositRadio, transferRadio, withdrawRadio)
+  $(".transactions").change(() => {
+    handleNewTransaction()
+  });
+
+  categorySelector.change(() => {
+    showCategoriesInput();
+  });
+  
+  categoryForm.submit((e)=>{
+    e.preventDefault();
+    handleCategories()
+    
+    setTimeout(() => {
+      setCategories()
+      showCategoriesInput()
+    }, 150);
+
+
+  })
+
+
+
+
+  
+
+
+
 
   
 
