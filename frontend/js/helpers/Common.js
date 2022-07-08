@@ -111,7 +111,7 @@ export const getAccounts = () =>{
 
   setTimeout(() => {
     Object.values(accountsRaw).forEach((element)=>{
-      const account = new Account (element.username, element.transaction, element.id)
+      const account = new Account (element.username, element.transactions, element.id)
       accountsArr.push(account)
     })
   }, 150);
@@ -171,8 +171,57 @@ export const handleAddTransaction = (description, amount, accountSelect, fromSel
     // let newTransaction = new Transaction (amount.val(),)
     let newTransaction = {accountId: accountId, accountIdFrom: accountIdFrom, accountIdTo: accountIdTo, account: accountSelect.val(), amount: amount.val(), from: fromSelect.val(), to: toSelect.val(), description: description.val(), type: type.val()}
 
+    if(newTransaction.account == 'Choose...') newTransaction.account = 'N/A'
+    if(newTransaction.from == 'Choose...') newTransaction.from = 'N/A'
+    if(newTransaction.to == 'Choose...') newTransaction.to = 'N/A'
+
     postMethod('transaction', newTransaction)
+
     
     console.log(accountsArr)
   }, 150);
+}
+
+
+export const transactionValidation = (account, from, to, amount, type, category) =>{
+
+  let accountsArr = getAccounts()
+  let accountBalanceArr = []
+  let balance
+
+  setTimeout(() => {
+
+    accountsArr.forEach((element)=>{
+      accountBalanceArr.push({account: element.username, balance: element.balance})
+    })
+
+    accountBalanceArr.forEach(element =>{
+      if(account.val() == element.account){
+        balance = element.balance
+      }
+    })
+    
+    
+  }, 200);
+  
+  console.log(balance)
+    
+  switch (type.val()){
+    case 'deposit':
+      if (account.val() != 'Chooose...' && category.val()!= 'Choose...' &&  amount.val() > 0){
+        return true
+      } else alert('Invalid operation!')
+      break
+    case 'withdraw':
+      if(account.val() != 'Choose...'&& category.val() != 'Choose...' && amount.val() > 0 && balance >= amount.val()){
+        return true
+      } else alert ('Invalid operation!')
+      break
+    case 'transfer':
+      if(from.val() != to.val() && category.val()!= 'Choose...' && amount.val() > 0){
+        return true
+      } else alert('Invalid Operation!')
+      break
+  }
+
 }

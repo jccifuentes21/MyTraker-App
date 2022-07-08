@@ -3,6 +3,7 @@ import {
   handleAddTransaction,
   handleNewTransaction,
   updateAccounts,
+  transactionValidation
 } from "./helpers/Common.js";
 
 import {
@@ -25,7 +26,8 @@ $(() => {
   const transactionForm = $('#transaction-form')
   const transactionAmount = $('#trans-amount')
   const transactionDescription = $('#trans-description')
-  let transactionType
+  let transactionType = $('.transactions:checked')
+  
   updateAccounts(accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
   setCategories();
   
@@ -60,14 +62,19 @@ $(() => {
 
   transactionForm.submit((e)=>{
     e.preventDefault();
+    const validation = transactionValidation(accountSelect, fromSelect, toSelect, transactionAmount, transactionType, categorySelector)
 
-    handleAddTransaction(transactionDescription, transactionAmount, accountSelect, fromSelect, toSelect,transactionType)
+    if(validation){
+      handleAddTransaction(transactionDescription, transactionAmount, accountSelect, fromSelect, toSelect, transactionType)
 
-    setTimeout(() => {
-      
-      updateAccounts( accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
-    }, 200);
-    
+      setTimeout(() => {
+        updateAccounts( accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
+        transactionForm.trigger('reset')
+        categoryForm.trigger('reset')
+      }, 250);
+    }
   })
+
+  
 
 });
