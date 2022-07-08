@@ -19,20 +19,18 @@ export const handleCategories = () => {
   let categoriesArr = [];
   const categoryInput = $("#add-cat-input");
 
-  $.get("http://localhost:3000/categories", (data) => {
+  $.get("http://localhost:3000/categories").done((data)=>{
     data.forEach((element) => {
       categoriesArr.push(element.name);
     });
-  });
 
-  setTimeout(() => {
     if (categoriesArr.includes(categoryInput.val())) {
       alert("This category already exists!");
     } else {
       postMethod("categories", categoryInput.val());
       categoryInput.val("");
     }
-  }, 100);
+  });
 
 };
 
@@ -41,17 +39,17 @@ export const setCategories = () => {
   const categorySelector = $("#category-selector");
 
   categorySelector.html("<option selected>Choose...</option>");
-  $.get("http://localhost:3000/categories", (data) => {
+
+  $.get("http://localhost:3000/categories").done((data)=>{
     data.forEach((element) => {
       categories.push(element.name);
     });
-  });
 
-  setTimeout(() => {
     categories.forEach((category) => {
       let option = $("<option></option");
       categorySelector.append(option.text(category));
     });
     categorySelector.append("<option>Add new...</option>");
-  }, 100);
+  });
+
 };
