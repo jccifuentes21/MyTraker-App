@@ -39,7 +39,7 @@ export const postMethod = (endpoint, data) => {
 
 export const addNewAccount = (text) => {
   let array = [];
-  $.get("http://localhost:3000/accounts", (data) => {
+  $.get("http://localhost:3000/accounts").done((data) => {
     data.forEach((element) => {
       array.push(element.username);
     });
@@ -56,36 +56,34 @@ export const addNewAccount = (text) => {
 
 export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSummary) => {
 
-  let accountsRaw = [];
   let accountsArr = [];
 
-  $.get("http://localhost:3000/accounts", (data) => {
-    accountsRaw = data;
-  });
+  var dataPromise = $.get("http://localhost:3000/accounts");
 
-  setTimeout(() => {
+  dataPromise.done((data)=>{
+
     //Updating Selectors
     accountSel.html("<option selected>Choose...</option>");
     fromSel.html("<option selected>Choose...</option>");
     toSel.html("<option selected>Choose...</option>");
     filterSel.html("<option selected>Choose...</option>");
     accountSummary.html("");
-
+  
           
     //Creating accounts array with account class objects
-    Object.values(accountsRaw).forEach((element) => {
+    Object.values(data).forEach((element) => {
       const account = new Account(element.username, element.transactions, element.id);
       accountsArr.push(account);
     });
-
+  
     //Updating values of selectors, and adding accounts to accounts summary
     accountsArr.forEach((element) => {
-
+  
       accountSel.append($("<option></option>").text(element.username));
       fromSel.append($("<option></option>").text(element.username));
       toSel.append($("<option></option>").text(element.username));
       filterSel.append($("<option></option>").text(element.username));
-
+  
       let row = $("<tr></tr>");
       let cellUsername = $("<td></td>");
       let cellBalance = $("<td></td>");
@@ -96,28 +94,33 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
       accountSummary.append(row);
     });
 
-  }, 100);
+  })
 
-  // return accountsArr;
 };
 
-export const getAccounts = () =>{
-  let accountsRaw = []
-  let accountsArr = []
+// export const getAccounts = async () =>{
 
-  $.get("http://localhost:3000/accounts", (data) => {
-    accountsRaw = data;
+//   let accountsArr = []
+
+//   var dataPromise = $.get("http://localhost:3000/accounts");
+
+//   dataPromise.done((data)=>{
+    
+//     Object.values(data).forEach((element)=>{
+//       const account = new Account (element.username, element.transactions, element.id)
+//       accountsArr.push(account)
+//     })
+
+//   })
+  
+//   return accountsArr
+// }
+export const getAccounts = async () => {
+  const data = await $.get('http://localhost:3000/accounts');
+  return data.map((element) => {
+    return new Account(element.username, element.transactions, element.id);
   });
-
-  setTimeout(() => {
-    Object.values(accountsRaw).forEach((element)=>{
-      const account = new Account (element.username, element.transactions, element.id)
-      accountsArr.push(account)
-    })
-  }, 150);
-
-  return accountsArr
-}
+};
 
 export const handleNewTransaction = () => {
   let radioValue;
@@ -145,13 +148,13 @@ export const handleNewTransaction = () => {
   }
 };
 
-export const handleAddTransaction = (description, amount, accountSelect, fromSelect, toSelect, type) =>{
-  const accountsArr = getAccounts()
+export const handleAddTransaction = async (description, amount, accountSelect, fromSelect, toSelect, type) =>{
+  const accountsArr = await getAccounts()
   let accountId
   let accountIdFrom = null
   let accountIdTo = null
 
-  setTimeout(() => {
+  // setTimeout(() => {
     //Setting the correct ID's for transactions
     accountsArr.forEach((account) =>{
       if(accountSelect.val() == account.username){
@@ -179,17 +182,17 @@ export const handleAddTransaction = (description, amount, accountSelect, fromSel
 
     
     console.log(accountsArr)
-  }, 150);
+  // }, 150);
 }
 
 
-export const transactionValidation = (account, from, to, amount, type, category) =>{
+export const transactionValidation = async (account, from, to, amount, type, category) =>{
 
-  let accountsArr = getAccounts()
+  let accountsArr = await getAccounts()
   let accountBalanceArr = []
   let balance
-
-  setTimeout(() => {
+  let balanceFrom
+  let balanceTo
 
     accountsArr.forEach((element)=>{
       accountBalanceArr.push({account: element.username, balance: element.balance})
@@ -199,27 +202,29 @@ export const transactionValidation = (account, from, to, amount, type, category)
       if(account.val() == element.account){
         balance = element.balance
       }
+      if(from.val() == element.account) balanceFrom = element.balance
+      if(to.val() == element.account) balanceTo = element.balance
     })
     
-    
-  }, 200);
-  
-  console.log(balance)
+    console.log(accountsArr)
+    console.log(balance, ' balance of account (transfer or withdraw)')  
+    console.log(balanceFrom, ' is the balance from') 
+    console.log(balanceTo, ' is the balance to')
     
   switch (type.val()){
     case 'deposit':
-      if (account.val() != 'Chooose...' && category.val()!= 'Choose...' &&  amount.val() > 0){
-        return true
+      if (account.val() != 'Chooose...' && category.val()!= 'Choose...' &&  parseInt(amount.val()) > 0){
+        return Promise.resolve(true) 
       } else alert('Invalid operation!')
       break
     case 'withdraw':
-      if(account.val() != 'Choose...'&& category.val() != 'Choose...' && amount.val() > 0 && balance >= amount.val()){
-        return true
+      if(account.val() != 'Choose...'&& category.val() != 'Choose...' && parseInt(amount.val()) > 0 && balance >= parseInt(amount.val())){
+        return Promise.resolve(true)
       } else alert ('Invalid operation!')
       break
     case 'transfer':
-      if(from.val() != to.val() && category.val()!= 'Choose...' && amount.val() > 0){
-        return true
+      if(from.val() != to.val() && category.val()!= 'Choose...' && parseInt(amount.val()) > 0 && balanceFrom >= parseInt(amount.val()))  {        
+        return Promise.resolve(true) 
       } else alert('Invalid Operation!')
       break
   }

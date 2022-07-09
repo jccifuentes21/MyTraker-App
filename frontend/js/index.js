@@ -3,7 +3,8 @@ import {
   handleAddTransaction,
   handleNewTransaction,
   updateAccounts,
-  transactionValidation
+  transactionValidation,
+  getAccounts
 } from "./helpers/Common.js";
 
 import {
@@ -57,22 +58,28 @@ $(() => {
     setTimeout(() => {
       setCategories();
       showCategoriesInput();
-    }, 150);
+    }, 200);
   });
 
   transactionForm.submit((e)=>{
     e.preventDefault();
     const validation = transactionValidation(accountSelect, fromSelect, toSelect, transactionAmount, transactionType, categorySelector)
 
-    if(validation){
-      handleAddTransaction(transactionDescription, transactionAmount, accountSelect, fromSelect, toSelect, transactionType)
+    validation.then((validationResult)=>{
 
-      setTimeout(() => {
-        updateAccounts( accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
-        transactionForm.trigger('reset')
-        categoryForm.trigger('reset')
-      }, 250);
-    }
+      if (validationResult == true){
+        handleAddTransaction(transactionDescription, transactionAmount, accountSelect, fromSelect, toSelect, transactionType)
+
+        setTimeout(() => {
+          updateAccounts( accountSelect, fromSelect, toSelect, filterSelect, accountSummary);      
+          transactionForm.trigger('reset')
+          categoryForm.trigger('reset')
+          handleNewTransaction();
+
+        }, 100);
+      }
+
+    })
   })
 
   
