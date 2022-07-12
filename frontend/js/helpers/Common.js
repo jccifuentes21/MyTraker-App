@@ -192,7 +192,9 @@ export const addToTransactionTable = (table) =>{
             amountCell.text(transaction.amount)
           }
         } else {
-          amountCell.text(transaction.amount)
+          if(transaction.type == 'withdraw'){
+            amountCell.text("-" + transaction.amount)
+          } else amountCell.text(transaction.amount) 
           usernameCell.text(transaction.account)
           row.addClass(transaction.account)
         }
