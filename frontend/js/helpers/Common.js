@@ -58,7 +58,7 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
 
   let accountsArr = [];
 
-  var dataPromise = $.get("http://localhost:3000/accounts");
+  let dataPromise = $.get("http://localhost:3000/accounts");
 
   dataPromise.done((data)=>{
 
@@ -98,23 +98,6 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
 
 };
 
-// export const getAccounts = async () =>{
-
-//   let accountsArr = []
-
-//   var dataPromise = $.get("http://localhost:3000/accounts");
-
-//   dataPromise.done((data)=>{
-    
-//     Object.values(data).forEach((element)=>{
-//       const account = new Account (element.username, element.transactions, element.id)
-//       accountsArr.push(account)
-//     })
-
-//   })
-  
-//   return accountsArr
-// }
 export const getAccounts = async () => {
   const data = await $.get('http://localhost:3000/accounts');
   return data.map((element) => {
@@ -148,31 +131,28 @@ export const handleNewTransaction = () => {
   }
 };
 
-export const handleAddTransaction = async (description, amount, accountSelect, fromSelect, toSelect, type) =>{
+export const handleAddTransaction = async (description, amount, accountSelect, fromSelect, toSelect, type, category) =>{
   const accountsArr = await getAccounts()
   let accountId
   let accountIdFrom = null
   let accountIdTo = null
 
-  // setTimeout(() => {
     //Setting the correct ID's for transactions
     accountsArr.forEach((account) =>{
-      if(accountSelect.val() == account.username){
+      if(accountSelect.val() == account.username && accountSelect.val() != 'Choose...'){
         accountId = account.id
-        console.log('Account id is ', accountId)
       }
       if(fromSelect.val() == account.username && fromSelect.val() != "Choose..."){
         accountIdFrom = account.id
-        console.log('Account id from is ', accountIdFrom)
       }
       if(toSelect.val() == account.username && toSelect.val() != "Choose..."){
         accountIdTo = account.id
-        console.log('Account id to is ', accountIdTo)
       }
     })
 
-    // let newTransaction = new Transaction (amount.val(),)
-    let newTransaction = {accountId: accountId, accountIdFrom: accountIdFrom, accountIdTo: accountIdTo, account: accountSelect.val(), amount: amount.val(), from: fromSelect.val(), to: toSelect.val(), description: description.val(), type: type.val()}
+    
+
+    let newTransaction = {accountId: accountId, accountIdFrom: accountIdFrom, accountIdTo: accountIdTo, account: accountSelect.val(), amount: amount.val(), from: fromSelect.val(), to: toSelect.val(), description: description.val(), type: type.val(), category:category.val()}
 
     if(newTransaction.account == 'Choose...') newTransaction.account = 'N/A'
     if(newTransaction.from == 'Choose...') newTransaction.from = 'N/A'
@@ -181,10 +161,68 @@ export const handleAddTransaction = async (description, amount, accountSelect, f
     postMethod('transaction', newTransaction)
 
     
-    console.log(accountsArr)
-  // }, 150);
 }
 
+export const addToTransactionTable = (table) =>{
+
+  let dataPromise = $.get("http://localhost:3000/transactions")
+
+  dataPromise.done((transactionData) =>{
+    table.html('')
+    transactionData.forEach((arrayOfTransactions)=> {
+      arrayOfTransactions.forEach((transaction)=>{
+        let row = $("<tr></tr>")
+        let idCell = $("<td></td>")
+        let usernameCell = $("<td></td>")
+        let typeCell = $("<td></td>")
+        let categoryCell = $("<td></td>")
+        let descriptionCell = $("<td></td>")
+        let amountCell = $("<td></td>")
+        let fromCell = $("<td></td>")
+        let toCell = $("<td></td>")
+
+        if(transaction.type == "transfer"){
+          if(transaction.accountId == transaction.accountIdFrom){
+            row.addClass(transaction.from)
+            usernameCell.text(transaction.from)
+            amountCell.text("-" + transaction.amount)
+          } else {
+            row.addClass(transaction.to)
+            usernameCell.text(transaction.to)
+            amountCell.text(transaction.amount)
+          }
+        } else {
+          amountCell.text(transaction.amount)
+          usernameCell.text(transaction.account)
+          row.addClass(transaction.account)
+        }
+
+
+        idCell.text(transaction.id)
+        typeCell.text(transaction.type)
+        categoryCell.text(transaction.category)
+        descriptionCell.text(transaction.description)
+        fromCell.text(transaction.from)
+        toCell.text(transaction.to)
+
+        row.append(idCell)
+        row.append(usernameCell)
+        row.append(typeCell)
+        row.append(categoryCell)
+        row.append(descriptionCell)
+        row.append(amountCell)
+        row.append(fromCell)
+        row.append(toCell)
+
+        table.append(row)
+      })
+    })
+    console.log(transactionData)
+  })
+
+
+
+}
 
 export const transactionValidation = async (account, from, to, amount, type, category) =>{
 
@@ -206,10 +244,6 @@ export const transactionValidation = async (account, from, to, amount, type, cat
       if(to.val() == element.account) balanceTo = element.balance
     })
     
-    console.log(accountsArr)
-    console.log(balance, ' balance of account (transfer or withdraw)')  
-    console.log(balanceFrom, ' is the balance from') 
-    console.log(balanceTo, ' is the balance to')
     
   switch (type.val()){
     case 'deposit':
@@ -230,3 +264,4 @@ export const transactionValidation = async (account, from, to, amount, type, cat
   }
 
 }
+

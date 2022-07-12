@@ -4,7 +4,8 @@ import {
   handleNewTransaction,
   updateAccounts,
   transactionValidation,
-  getAccounts
+  getAccounts,
+  addToTransactionTable
 } from "./helpers/Common.js";
 
 import {
@@ -28,9 +29,11 @@ $(() => {
   const transactionAmount = $('#trans-amount')
   const transactionDescription = $('#trans-description')
   let transactionType = $('.transactions:checked')
+  const transactionData = $('#transaction-data')
   
   updateAccounts(accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
   setCategories();
+  addToTransactionTable(transactionData)
   
   newAccountForm.submit((e) => {
     e.preventDefault();
@@ -68,13 +71,14 @@ $(() => {
     validation.then((validationResult)=>{
 
       if (validationResult == true){
-        handleAddTransaction(transactionDescription, transactionAmount, accountSelect, fromSelect, toSelect, transactionType)
-
+        handleAddTransaction(transactionDescription, transactionAmount, accountSelect, fromSelect, toSelect, transactionType, categorySelector)
+        
         setTimeout(() => {
           updateAccounts( accountSelect, fromSelect, toSelect, filterSelect, accountSummary);      
           transactionForm.trigger('reset')
           categoryForm.trigger('reset')
           handleNewTransaction();
+          addToTransactionTable(transactionData);
 
         }, 100);
       }
