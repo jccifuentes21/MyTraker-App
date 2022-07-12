@@ -5,7 +5,8 @@ import {
   updateAccounts,
   transactionValidation,
   getAccounts,
-  addToTransactionTable
+  addToTransactionTable,
+  filterFunction
 } from "./helpers/Common.js";
 
 import {
@@ -86,6 +87,9 @@ $(() => {
     })
   })
 
+  filterSelect.change(() =>{
+    filterFunction(filterSelect)
+  })
   
 
 });

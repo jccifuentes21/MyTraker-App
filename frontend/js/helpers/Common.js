@@ -66,7 +66,7 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
     accountSel.html("<option selected>Choose...</option>");
     fromSel.html("<option selected>Choose...</option>");
     toSel.html("<option selected>Choose...</option>");
-    filterSel.html("<option selected>Choose...</option>");
+    filterSel.html("<option selected>All</option>");
     accountSummary.html("");
   
           
@@ -263,5 +263,26 @@ export const transactionValidation = async (account, from, to, amount, type, cat
       break
   }
 
+}
+
+export const filterFunction = async (filterSelect) =>{
+  const accounts = await getAccounts()
+  let usernames = []
+
+  accounts.forEach((account)=>{
+    usernames.push(account.username)
+  })
+
+  usernames.forEach((username=>{
+    if(filterSelect.val() == "All"){
+      $("tr." + username).removeClass('d-none')
+    } else if(filterSelect.val() != username){
+      $("tr." + username).addClass("d-none")
+    } else $("tr." + username).removeClass('d-none')
+  }))
+
+  console.log(usernames)
+  // $(".")
+  // console.log(filterSelect.val())
 }
 
