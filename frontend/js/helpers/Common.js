@@ -251,17 +251,31 @@ export const transactionValidation = async (account, from, to, amount, type, cat
     case 'deposit':
       if (account.val() != 'Chooose...' && category.val()!= 'Choose...' &&  parseInt(amount.val()) > 0){
         return Promise.resolve(true) 
-      } else alert('Invalid operation!')
+      } else {
+        if (account.val() == 'Choose...') alert ('Please choose an account!')
+        if (category.val() == 'Choose...') alert ('Please choose a category!')
+        if (parseInt(amount.val()) <= 0 || amount.val() == "") alert ('Please enter an amount greater than 0!')
+      }
       break
     case 'withdraw':
       if(account.val() != 'Choose...'&& category.val() != 'Choose...' && parseInt(amount.val()) > 0 && balance >= parseInt(amount.val())){
         return Promise.resolve(true)
-      } else alert ('Invalid operation!')
+      } else {
+        if (account.val() == 'Choose...') alert ('Please choose an account!')
+        if (category.val() == 'Choose...') alert ('Please choose a category!')
+        if (parseInt(amount.val()) <= 0 || amount.val() == "") alert ('Please enter an amount greater than 0!')
+        if (balance < parseInt(amount.val())) alert ('Acccount does not have sufficient balance!')
+      }
       break
     case 'transfer':
       if(from.val() != to.val() && category.val()!= 'Choose...' && parseInt(amount.val()) > 0 && balanceFrom >= parseInt(amount.val()))  {        
         return Promise.resolve(true) 
-      } else alert('Invalid Operation!')
+      } else {
+        if (account.val() == 'Choose...') alert ('Please choose an account!')
+        if (category.val() == 'Choose...') alert ('Please choose a category!')
+        if (parseInt(amount.val()) <= 0) alert ('Please enter an amount greater than 0!')
+        if (balance < parseInt(amount.val())) alert ('Acccount does not have sufficient balance!')
+      }
       break
   }
 
