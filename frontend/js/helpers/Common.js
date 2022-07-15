@@ -271,9 +271,9 @@ export const transactionValidation = async (account, from, to, amount, type, cat
       if(from.val() != to.val() && category.val()!= 'Choose...' && parseInt(amount.val()) > 0 && balanceFrom >= parseInt(amount.val()))  {        
         return Promise.resolve(true) 
       } else {
-        if (account.val() == 'Choose...') alert ('Please choose an account!')
+        if (from.val() == to.val()) alert ('Accounts cannot be the same for transfer!')
         if (category.val() == 'Choose...') alert ('Please choose a category!')
-        if (parseInt(amount.val()) <= 0) alert ('Please enter an amount greater than 0!')
+        if (parseInt(amount.val()) <= 0 || amount.val() == "") alert ('Please enter an amount greater than 0!')
         if (balance < parseInt(amount.val())) alert ('Acccount does not have sufficient balance!')
       }
       break
