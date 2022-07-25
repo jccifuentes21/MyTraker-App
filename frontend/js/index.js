@@ -42,7 +42,7 @@ $(() => {
     
     setTimeout(() => {
       updateAccounts( accountSelect, fromSelect, toSelect, filterSelect, accountSummary);
-    }, 100);
+    }, 150);
     
   });
   
