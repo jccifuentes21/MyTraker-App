@@ -1,12 +1,14 @@
 //common functions that can be used in different cases
 
+export const domainURL = 'https://mytrakr-jc.herokuapp.com/'
+
 export const postMethod = (endpoint, data) => {
   switch (endpoint) {
     case "accounts":
       const newAccount = data;
       $.ajax({
         type: "POST",
-        url: `http://localhost:3000/${endpoint}`,
+        url: `${domainURL}/${endpoint}`,
         data: JSON.stringify({ newAccount }),
         dataType: "json",
         contentType: "application/json",
@@ -17,7 +19,7 @@ export const postMethod = (endpoint, data) => {
       const newTransaction = data;
       $.ajax({
         type: "POST",
-        url: `http://localhost:3000/${endpoint}`,
+        url: `${domainURL}/${endpoint}`,
         data: JSON.stringify({ newTransaction }),
         dataType: "json",
         contentType: "application/json",
@@ -28,7 +30,7 @@ export const postMethod = (endpoint, data) => {
       const newCategory = data;
       $.ajax({
         type: "POST",
-        url: `http://localhost:3000/${endpoint}`,
+        url: `${domainURL}/${endpoint}`,
         data: JSON.stringify({ newCategory }),
         dataType: "json",
         contentType: "application/json",
@@ -39,7 +41,7 @@ export const postMethod = (endpoint, data) => {
 
 export const addNewAccount = (text) => {
   let array = [];
-  $.get("http://localhost:3000/accounts").done((data) => {
+  $.get("${domainURL}/accounts").done((data) => {
     data.forEach((element) => {
       array.push(element.username);
     });
@@ -58,7 +60,7 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
 
   let accountsArr = [];
 
-  let dataPromise = $.get("http://localhost:3000/accounts");
+  let dataPromise = $.get("${domainURL}/accounts");
 
   dataPromise.done((data)=>{
 
@@ -99,7 +101,7 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
 };
 
 export const getAccounts = async () => {
-  const data = await $.get('http://localhost:3000/accounts');
+  const data = await $.get('${domainURL}/accounts');
   return data.map((element) => {
     return new Account(element.username, element.transactions, element.id);
   });
@@ -165,7 +167,7 @@ export const handleAddTransaction = async (description, amount, accountSelect, f
 
 export const addToTransactionTable = (table) =>{
 
-  let dataPromise = $.get("http://localhost:3000/transactions")
+  let dataPromise = $.get("${domainURL}/transactions")
 
   dataPromise.done((transactionData) =>{
     table.html('')

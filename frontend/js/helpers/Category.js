@@ -1,4 +1,5 @@
 import { postMethod } from "./Common.js";
+import { domainURL } from "./Common.js";
 
 export const showCategoriesInput = () =>{
   const categorySelector = $("#category-selector");
@@ -19,7 +20,7 @@ export const handleCategories = () => {
   let categoriesArr = [];
   const categoryInput = $("#add-cat-input");
 
-  $.get("http://localhost:3000/categories").done((data)=>{
+  $.get(`${domainURL}/categories`).done((data)=>{
     data.forEach((element) => {
       categoriesArr.push(element.name);
     });
@@ -40,7 +41,7 @@ export const setCategories = () => {
 
   categorySelector.html("<option selected>Choose...</option>");
 
-  $.get("http://localhost:3000/categories").done((data)=>{
+  $.get(`${domainURL}/categories`).done((data)=>{
     data.forEach((element) => {
       categories.push(element.name);
     });
