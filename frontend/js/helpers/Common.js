@@ -1,6 +1,6 @@
 //common functions that can be used in different cases
 
-export const domainURL = 'https://mytrakr-jc.herokuapp.com/'
+export const domainURL = 'https://mytrakr-jc.herokuapp.com'
 
 export const postMethod = (endpoint, data) => {
   switch (endpoint) {
