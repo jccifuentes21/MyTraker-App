@@ -41,7 +41,7 @@ export const postMethod = (endpoint, data) => {
 
 export const addNewAccount = (text) => {
   let array = [];
-  $.get("${domainURL}/accounts").done((data) => {
+  $.get(`${domainURL}/accounts`).done((data) => {
     data.forEach((element) => {
       array.push(element.username);
     });
@@ -60,7 +60,7 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
 
   let accountsArr = [];
 
-  let dataPromise = $.get("${domainURL}/accounts");
+  let dataPromise = $.get(`${domainURL}/accounts`);
 
   dataPromise.done((data)=>{
 
@@ -101,7 +101,7 @@ export const updateAccounts = (accountSel, fromSel, toSel, filterSel, accountSum
 };
 
 export const getAccounts = async () => {
-  const data = await $.get('${domainURL}/accounts');
+  const data = await $.get(`${domainURL}/accounts`);
   return data.map((element) => {
     return new Account(element.username, element.transactions, element.id);
   });
@@ -167,7 +167,7 @@ export const handleAddTransaction = async (description, amount, accountSelect, f
 
 export const addToTransactionTable = (table) =>{
 
-  let dataPromise = $.get("${domainURL}/transactions")
+  let dataPromise = $.get(`${domainURL}/transactions`)
 
   dataPromise.done((transactionData) =>{
     table.html('')
