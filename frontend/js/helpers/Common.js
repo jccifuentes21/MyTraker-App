@@ -251,7 +251,7 @@ export const transactionValidation = async (account, from, to, amount, type, cat
     
   switch (type.val()){
     case 'deposit':
-      if (account.val() != 'Chooose...' && category.val()!= 'Choose...' &&  parseInt(amount.val()) > 0){
+      if (account.val() != 'Chooose...' && category.val()!= 'Choose...' && category.val() != 'Add new...' &&  parseInt(amount.val()) > 0){
         return Promise.resolve(true) 
       } else {
         if (account.val() == 'Choose...') alert ('Please choose an account!')
@@ -260,7 +260,7 @@ export const transactionValidation = async (account, from, to, amount, type, cat
       }
       break
     case 'withdraw':
-      if(account.val() != 'Choose...'&& category.val() != 'Choose...' && parseInt(amount.val()) > 0 && balance >= parseInt(amount.val())){
+      if(account.val() != 'Choose...'&& category.val() != 'Choose...' && category.val() != 'Add new...' && parseInt(amount.val()) > 0 && balance >= parseInt(amount.val())){
         return Promise.resolve(true)
       } else {
         if (account.val() == 'Choose...') alert ('Please choose an account!')
@@ -270,7 +270,7 @@ export const transactionValidation = async (account, from, to, amount, type, cat
       }
       break
     case 'transfer':
-      if(from.val() != to.val() && category.val()!= 'Choose...' && parseInt(amount.val()) > 0 && balanceFrom >= parseInt(amount.val()))  {        
+      if(from.val() != to.val() && category.val()!= 'Choose...' && category.val() != 'Add new...' && parseInt(amount.val()) > 0 && balanceFrom >= parseInt(amount.val()))  {        
         return Promise.resolve(true) 
       } else {
         if (from.val() == to.val()) alert ('Accounts cannot be the same for transfer!')
