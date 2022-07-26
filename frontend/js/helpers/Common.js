@@ -255,7 +255,7 @@ export const transactionValidation = async (account, from, to, amount, type, cat
         return Promise.resolve(true) 
       } else {
         if (account.val() == 'Choose...') alert ('Please choose an account!')
-        if (category.val() == 'Choose...') alert ('Please choose a category!')
+        if (category.val() == 'Choose...' || category.val() == 'Add new...') alert ('Please choose a category!')
         if (parseInt(amount.val()) <= 0 || amount.val() == "") alert ('Please enter an amount greater than 0!')
       }
       break
@@ -264,7 +264,7 @@ export const transactionValidation = async (account, from, to, amount, type, cat
         return Promise.resolve(true)
       } else {
         if (account.val() == 'Choose...') alert ('Please choose an account!')
-        if (category.val() == 'Choose...') alert ('Please choose a category!')
+        if (category.val() == 'Choose...' || category.val() == 'Add new...') alert ('Please choose a category!')
         if (parseInt(amount.val()) <= 0 || amount.val() == "") alert ('Please enter an amount greater than 0!')
         if (balance < parseInt(amount.val())) alert ('Acccount does not have sufficient balance!')
       }
@@ -274,7 +274,7 @@ export const transactionValidation = async (account, from, to, amount, type, cat
         return Promise.resolve(true) 
       } else {
         if (from.val() == to.val()) alert ('Accounts cannot be the same for transfer!')
-        if (category.val() == 'Choose...') alert ('Please choose a category!')
+        if (category.val() == 'Choose...' || category.val() == 'Add new...') alert ('Please choose a category!')
         if (parseInt(amount.val()) <= 0 || amount.val() == "") alert ('Please enter an amount greater than 0!')
         if (balance < parseInt(amount.val())) alert ('Acccount does not have sufficient balance!')
       }
